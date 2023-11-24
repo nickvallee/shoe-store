@@ -10,7 +10,6 @@ import {
   Badge,
   Box,
   Button,
-  Text,
 } from "@chakra-ui/react";
 
 // Define your data type
