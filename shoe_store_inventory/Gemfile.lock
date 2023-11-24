@@ -90,6 +90,10 @@ GEM
     drb (2.2.0)
       ruby2_keywords
     erubi (1.12.0)
+    eventmachine (1.2.7)
+    faye-websocket (0.11.3)
+      eventmachine (>= 0.12.0)
+      websocket-driver (>= 0.5.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
     i18n (1.14.1)
@@ -193,6 +197,8 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   debug
+  eventmachine
+  faye-websocket
   puma (>= 5.0)
   rails (~> 7.1.2)
   sqlite3 (~> 1.4)
