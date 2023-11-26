@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   ChakraProvider,
   Table,
@@ -24,7 +24,7 @@ interface Store {
 }
 
 // Dummy data
-const stores: Store[] = [
+const mockStores: Store[] = [
   {
     productCode: "1234",
     product: "Running Shoes",
@@ -54,7 +54,50 @@ const stores: Store[] = [
   },
 ];
 
+// Define your shoe model data type
+interface ShoeModel {
+  name: string;
+  store: string;
+  inventory: number;
+}
+
+// Dummy data for shoe models
+const shoeModels: ShoeModel[] = [
+  {
+    name: "Running Shoes",
+    store: "ALDO Centre Eaton",
+    inventory: 100,
+  },
+  {
+    name: "Hiking Boots",
+    store: "ALDO Destiny USA Mall",
+    inventory: 50,
+  },
+  {
+    name: "Casual Sneakers",
+    store: "ALDO Pheasant Lane Mall",
+    inventory: 200,
+  },
+];
+
 export const App = () => {
+  const [stores, setStores] = useState<Store[]>([]);
+
+  useEffect(() => {
+    fetch("http://localhost:3000/stores") // replace with your Rails API endpoint
+      .then((response) => response.json())
+      .then((data) => {
+        setStores(data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    console.log(stores);
+  }, [stores]);
+
   return (
     <ChakraProvider>
       <Box width="100%" p={4}>
@@ -62,7 +105,7 @@ export const App = () => {
         <Table variant="simple">
           <Thead>
             <Tr>
-              <Th>Product Code</Th>
+              <Th>Show Model</Th>
               <Th>Product</Th>
               <Th isNumeric>Quantity</Th>
               <Th>Status</Th>
@@ -72,7 +115,7 @@ export const App = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {stores.map((store, index) => (
+            {mockStores.map((store, index) => (
               <Tr key={index}>
                 <Td>{store.productCode}</Td>
                 <Td>{store.product}</Td>
