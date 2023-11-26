@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+
 import {
   ChakraProvider,
   Table,
@@ -80,6 +82,12 @@ const shoeModels: ShoeModel[] = [
   },
 ];
 
+const Placeholder = () => (
+  <Box>
+    <h1>WHAT's up!</h1>
+  </Box>
+);
+
 export const App = () => {
   const [stores, setStores] = useState<Store[]>([]);
 
@@ -100,43 +108,54 @@ export const App = () => {
 
   return (
     <ChakraProvider>
-      <Box width="100%" p={4}>
-        <Button mb={4}>New Order</Button>
-        <Table variant="simple">
-          <Thead>
-            <Tr>
-              <Th>Show Model</Th>
-              <Th>Product</Th>
-              <Th isNumeric>Quantity</Th>
-              <Th>Status</Th>
-              <Th>Date</Th>
-              <Th>Store Name</Th>
-              {/* Add more headers if needed */}
-            </Tr>
-          </Thead>
-          <Tbody>
-            {mockStores.map((store, index) => (
-              <Tr key={index}>
-                <Td>{store.productCode}</Td>
-                <Td>{store.product}</Td>
-                <Td isNumeric>{store.quantity}</Td>
-                <Td>
-                  <Badge
-                    colorScheme={
-                      store.status === "Completed" ? "green" : "orange"
-                    }
-                  >
-                    {store.status}
-                  </Badge>
-                </Td>
-                <Td>{store.date}</Td>
-                <Td>{store.name}</Td>
-                {/* Add more data cells if needed */}
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </Box>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            index
+            path="/"
+            element={
+              <Box width="100%" p={4}>
+                <Button mb={4}>New Order</Button>
+                <Table variant="simple">
+                  <Thead>
+                    <Tr>
+                      <Th>Show Model</Th>
+                      <Th>Product</Th>
+                      <Th isNumeric>Quantity</Th>
+                      <Th>Status</Th>
+                      <Th>Date</Th>
+                      <Th>Store Name</Th>
+                      {/* Add more headers if needed */}
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {mockStores.map((store, index) => (
+                      <Tr key={index}>
+                        <Td>{store.productCode}</Td>
+                        <Td>{store.product}</Td>
+                        <Td isNumeric>{store.quantity}</Td>
+                        <Td>
+                          <Badge
+                            colorScheme={
+                              store.status === "Completed" ? "green" : "orange"
+                            }
+                          >
+                            {store.status}
+                          </Badge>
+                        </Td>
+                        <Td>{store.date}</Td>
+                        <Td>{store.name}</Td>
+                        {/* Add more data cells if needed */}
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </Box>
+            }
+          />
+          <Route path="/placeholder" element={<Placeholder />} />
+        </Routes>
+      </BrowserRouter>
     </ChakraProvider>
   );
 };
