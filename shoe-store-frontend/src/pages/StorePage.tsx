@@ -11,6 +11,7 @@ import {
   Td,
   Box,
   useToast,
+  Button,
 } from "@chakra-ui/react";
 import { consumer } from "../actionCableSetup";
 
@@ -73,14 +74,21 @@ export const StoreTable = () => {
         <Thead>
           <Tr>
             <Th>Store Name</Th>
-            <Th>Number of Shoe Models</Th>
+            <Th>Inventory</Th>
           </Tr>
         </Thead>
         <Tbody>
           {stores.map((store, index) => (
-            <Tr key={index} onClick={() => navigate(`/shoe/${store.id}`)}>
+            <Tr key={index}>
               <Td>{store.name}</Td>
-              <Td>{store.shoe_models.length}</Td>
+              <Td>
+                <Button
+                  colorScheme="yellow"
+                  onClick={() => navigate(`/shoe/${store.id}`)}
+                >
+                  View Store Inventory
+                </Button>
+              </Td>
             </Tr>
           ))}
         </Tbody>
