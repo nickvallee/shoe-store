@@ -10,7 +10,6 @@ import {
   Th,
   Td,
   Box,
-  Button,
   useToast,
 } from "@chakra-ui/react";
 import { consumer } from "../actionCableSetup";
@@ -44,12 +43,10 @@ export const StoreTable = () => {
       disconnected: () => {
         console.log("Disconnected from InventoryChannel");
       },
-      received: (data) => {
-        console.log("RECIEVED FROM BORADCAST", data);
-        // Update your state or props here
+      received: (data: any) => {
         toast({
           title: "Inventory Update",
-          description: "Received an update from the websocket",
+          description: data.broadcastMessage,
           status: "info",
           duration: 5000,
           isClosable: true,
@@ -70,19 +67,8 @@ export const StoreTable = () => {
     };
   }, [toast]);
 
-  const handleNewOrder = () => {
-    if (subscription.current) {
-      subscription.current.perform("InventoryChannel", {
-        /* your data here */
-      });
-    }
-  };
-
   return (
     <Box width="100%" p={4}>
-      <Button mb={4} onClick={handleNewOrder}>
-        New Order
-      </Button>
       <Table variant="simple">
         <Thead>
           <Tr>

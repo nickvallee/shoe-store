@@ -62,6 +62,16 @@ export const ShoePage = () => {
     }
   };
 
+  const decreaseInventory = (shoeModelName: string) => {
+    if (subscription.current) {
+      console.log("sent!!");
+      subscription.current.perform("decrease_inventory", {
+        storeId,
+        shoeModelName,
+      });
+    }
+  };
+
   return (
     <Box width="100%" p={4}>
       <Button mb={4} onClick={() => navigate("/")}>
@@ -73,6 +83,7 @@ export const ShoePage = () => {
             <Th>Shoe Model</Th>
             <Th>Inventory</Th>
             <Th></Th>
+            <Th></Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -81,8 +92,19 @@ export const ShoePage = () => {
               <Td>{shoeModel.name}</Td>
               <Td>{shoeModel.inventory}</Td>
               <Td>
-                <Button onClick={() => addInventory(shoeModel.name)}>
+                <Button
+                  colorScheme="green"
+                  onClick={() => addInventory(shoeModel.name)}
+                >
                   Add Inventory
+                </Button>
+              </Td>
+              <Td>
+                <Button
+                  colorScheme="red"
+                  onClick={() => decreaseInventory(shoeModel.name)}
+                >
+                  Trigger Sale
                 </Button>
               </Td>
             </Tr>
