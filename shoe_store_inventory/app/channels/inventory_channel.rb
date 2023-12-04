@@ -4,27 +4,32 @@ class InventoryChannel < ApplicationCable::Channel
   end
 
   def add_inventory(data)
-    store = Store.find(data["storeId"])
-    shoe_model = store.shoe_models.find_by(name: data["shoeModelName"])
+    puts "ADD INVENTORY"
+    puts data
+    store = Store.find_or_create_by(name: data["store"])
+    shoe_model = store.shoe_models.find_or_create_by(name: data["model"])
 
     shoe_model.inventory += 1
     shoe_model.save 
     incremented_inventory = shoe_model.inventory
 
+
+    puts "before broad cast!!"
+
+
     ActionCable.server.broadcast('inventory_updates', {
-      storeId: store.id,
-      shoeModelName: shoe_model.name,
+      store: store.name,
+      model: shoe_model.name,
       inventory: incremented_inventory,
       broadcastMessage: "stock increase for #{shoe_model.name} in #{store.name}"
     })
   end
 
   def decrease_inventory(data)
-    store = Store.find(data["storeId"])
-    shoe_model = store.shoe_models.find_by(name: data["shoeModelName"])
+    store = Store.find_or_create_by(name: data["store"])
+    shoe_model = store.shoe_models.find_or_create_by(name: data["model"])
 
     shoe_model.inventory -= 1 if shoe_model.inventory > 0
-    shoe_model.save 
     decremented_inventory = shoe_model.inventory
 
     broadcast_message = if decremented_inventory < 5
@@ -34,8 +39,8 @@ class InventoryChannel < ApplicationCable::Channel
     end
 
     ActionCable.server.broadcast('inventory_updates', {
-      storeId: store.id,
-      shoeModelName: shoe_model.name,
+      store: store.name,
+      model: shoe_model.name,
       inventory: decremented_inventory,
       broadcastMessage: broadcast_message
     })
@@ -45,4 +50,3 @@ class InventoryChannel < ApplicationCable::Channel
 
   end
 end
-

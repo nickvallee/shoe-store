@@ -84,7 +84,9 @@ export const StoreTable = () => {
               <Td>
                 <Button
                   colorScheme="yellow"
-                  onClick={() => navigate(`/shoe/${store.id}`)}
+                  onClick={() =>
+                    navigate(`/shoe/${store.id}`, { state: { store } })
+                  }
                 >
                   View Store Inventory
                 </Button>

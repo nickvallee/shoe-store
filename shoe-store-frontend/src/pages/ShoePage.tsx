@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Table, Thead, Tbody, Tr, Th, Td, Box, Button } from "@chakra-ui/react";
 import { consumer } from "../actionCableSetup";
 
@@ -9,13 +9,15 @@ interface ShoeModel {
 }
 
 export const ShoePage = () => {
-  const { storeId } = useParams();
+  const locationState = useLocation();
+  const { state } = locationState;
+  const store = state?.store;
   const navigate = useNavigate();
   const [shoeModels, setShoeModels] = useState<ShoeModel[]>([]);
   const subscription = useRef<any>(null);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/stores/${storeId}`)
+    fetch(`http://localhost:3000/stores/${store.id}`)
       .then((response) => response.json())
       .then((data) => {
         setShoeModels(data.shoe_models);
@@ -28,14 +30,13 @@ export const ShoePage = () => {
     subscription.current = consumer.subscriptions.create("InventoryChannel", {
       received: (data: any) => {
         console.log("data", data);
-        console.log("STORE ID", data.storeId, storeId);
 
-        if (Number(data.storeId) === Number(storeId)) {
+        if (data.store === store.name) {
           console.log(" update state HAPPENS");
 
           setShoeModels((currentShoeModels) => {
             return currentShoeModels.map((shoeModel) => {
-              if (shoeModel.name === data.shoeModelName) {
+              if (shoeModel.name === data.model) {
                 return { ...shoeModel, inventory: data.inventory };
               }
               return shoeModel;
@@ -50,14 +51,14 @@ export const ShoePage = () => {
         subscription.current.unsubscribe();
       }
     };
-  }, [storeId]);
+  }, [store]);
 
   const addInventory = (shoeModelName: string) => {
     if (subscription.current) {
       console.log("sent!!");
       subscription.current.perform("add_inventory", {
-        storeId,
-        shoeModelName,
+        store: store.name,
+        model: shoeModelName,
       });
     }
   };
@@ -66,8 +67,8 @@ export const ShoePage = () => {
     if (subscription.current) {
       console.log("sent!!");
       subscription.current.perform("decrease_inventory", {
-        storeId,
-        shoeModelName,
+        store: store.name,
+        model: shoeModelName,
       });
     }
   };
